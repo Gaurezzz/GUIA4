@@ -1,5 +1,7 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { data } from "../app/data";
+import { Popup } from "./popup";
 
 export const ProductList = ({
   allProducts,
@@ -9,6 +11,8 @@ export const ProductList = ({
   total,
   setTotal,
 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState({});
   const onAddProduct = (product) => {
     if (allProducts.find((item) => item.id === product.id)) {
       const products = allProducts.map((item) =>
@@ -25,15 +29,21 @@ export const ProductList = ({
     setAllProducts([...allProducts, product]);
   };
 
+  const openDescription = (product) => {
+    setIsVisible(!isVisible);
+    setCurrentProduct(product);
+  };
+
   return (
+    <>
     <div className="container-items">
       {data.map((product) => (
         <div className="item" key={product.id}>
           <figure>
-            <img src={product.urlImage} alt={product.title} />
+            <img src={product.urlImage} alt={product.title} onClick={() => openDescription(product)}/>
           </figure>
           <div className="info-product">
-            <h2>{product.nameProduct}</h2>
+            <h2>{product.title}</h2>
             <p className="price">${product.price}</p>
             <button onClick={() => onAddProduct(product)}>
               Añadir al carrito
@@ -42,5 +52,9 @@ export const ProductList = ({
         </div>
       ))}
     </div>
+    {isVisible && currentProduct && (
+        <Popup product={currentProduct} onClose={() => setIsVisible(false)} />
+      )}
+    </>
   );
 };

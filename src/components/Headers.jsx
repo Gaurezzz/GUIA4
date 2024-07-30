@@ -13,13 +13,17 @@ export const Headers = ({
     const [active, setActive] = useState(false);
   
     const onDeleteProduct = (product) => {
-      const results = allProducts.filter((item) => item.id !== product.id);
-      setTotal(total - product.price * product.quantity);
-      setCountProducts(countProducts - product.quantity);
-      setAllProducts(results);
+        //voy a mandar un alert para q confirme si de verdad quiere eliminar el producto
+        if (window.confirm('¿Estás seguro de eliminar este producto?')) {
+            const results = allProducts.filter((item) => item.id !== product.id);
+            setTotal(total - product.price * product.quantity);
+            setCountProducts(countProducts - product.quantity);
+            setAllProducts(results);
+        }
     };
   
     const onCleanCart = () => {
+        if (!window.confirm('¿Estás seguro de vaciar el carrito?')) return;
       setAllProducts([]);
       setTotal(0);
       setCountProducts(0);
@@ -54,6 +58,7 @@ export const Headers = ({
                           <span className="cantidad-producto-carrito">
                             {product.quantity}
                           </span>
+                          <img src={product.urlImage} className="imagen-carrito"></img>
                           <p className="titulo-producto-carrito">
                             {product.title}
                           </p>
